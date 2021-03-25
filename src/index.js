@@ -1,8 +1,8 @@
 // Imports
 const { Ad, search } = require("kijiji-scraper");
 const { TelegramClient } = require("messaging-api-telegram");
-const config = require("./config.js");
 const { ToadScheduler, SimpleIntervalJob, Task} = require("toad-scheduler");
+const config = require("./config.js");
 const engineer = require("./engineer"); // Engineer solves problems
 
 
@@ -49,7 +49,7 @@ function validateAds(ads) {
     for (let i = 0; i < ads.length; i++) {
         let notSponsored = isNotSponsored(ads[i]);
         let postedAfterLastSearch = validateAdPostTime(ads[i]);
-        if (debugMode) { engineer.logAdValidation(ads[i], notSponsored, postedAfterLastSearch); };
+        if (debugMode) { engineer.logAdValidation(ads[i], notSponsored, postedAfterLastSearch, ads, lastSearchTime); };
         if (postedAfterLastSearch && isNotSponsored) {
             validAds.push(ads[i]);
         } else if (!postedAfterLastSearch && isNotSponsored) {

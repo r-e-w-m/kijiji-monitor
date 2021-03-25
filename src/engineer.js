@@ -2,6 +2,7 @@
 const fs = require("fs");
 const stream = fs.createWriteStream("../logs/DebugLog-" + new Date().toLocaleDateString() + ".txt", {flags:'a'});
 const config = require("./config.js");
+const { Ad } = require("kijiji-scraper");
 
 
 // Header
@@ -12,7 +13,7 @@ function logSearchInfo(searchTerm, ads) {
 
 
 // Body
-function logAdValidation(ad, isNotSponsored, postedAfterLastSearch) {
+function logAdValidation(ad, isNotSponsored, postedAfterLastSearch, ads, lastSearchTime) {
     if (isNotSponsored) { 
         loggers("Ad with title: \"" + ad.title + "\" is not sponsored!"); 
     } else { 
@@ -30,7 +31,12 @@ function logAdValidation(ad, isNotSponsored, postedAfterLastSearch) {
     } else if (!isNotSponsored) { 
         loggers("Ad with title \"" + ad.title + "\" is sponsored, moving to next ad!"); 
     } else { 
-        loggers("Ad with title: \"" + ad.title + "\" after cutoff date, stopping search! (" + ad.Date() + ")"); 
+        loggers("Ad with title: \"" + ad.title + "\" after cutoff date, stopping search!"); 
+        loggers("Last Search was at: " + lastSearchTime.toLocaleTimeString() + " and ad was posted at " + ad.date.toLocaleTimeString());
+        loggers("List of ads returned from scraper:");
+        for (var i = 0; i < ads.length; i++) {
+            loggers("||| " + ads[i].title + " - " + ads[i].date.toLocaleDateString() + " " + ads[i].date.toLocaleTimeString());
+        }
     };
 }
 
