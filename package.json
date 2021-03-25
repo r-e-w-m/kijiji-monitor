@@ -1,0 +1,16 @@
+{
+  "name": "my-kijiji-scraper",
+  "version": "1.0.0",
+  "description": "Kijiji Ad Scraper",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Ryan",
+  "license": "ISC",
+  "dependencies": {
+    "kijiji-scraper": "^6.1.2",
+    "messaging-api-telegram": "^1.0.4",
+    "toad-scheduler": "^1.0.2"
+  }
+}

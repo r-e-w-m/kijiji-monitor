@@ -1,0 +1,71 @@
+// Imports
+const fs = require("fs");
+const stream = fs.createWriteStream("../logs/DebugLog-" + new Date().toLocaleDateString() + ".txt", {flags:'a'});
+const config = require("./config.js");
+
+
+// Header
+function logSearchInfo(searchTerm, ads) {
+    loggers("New search started for: \"" + searchTerm + "\"");
+    loggers("Examining " + ads.length + " ads!");
+}
+
+
+// Body
+function logAdValidation(ad, isNotSponsored, postedAfterLastSearch) {
+    if (isNotSponsored) { 
+        loggers("Ad with title: \"" + ad.title + "\" is not sponsored!"); 
+    } else { 
+        loggers("Ad with title: \"" + ad.title + "\" is sponsored!");
+    };
+
+    if (postedAfterLastSearch) { 
+        loggers("Ad with title: \"" + ad.title + "\" is new!"); 
+    } else { 
+        loggers("Ad with title: \"" + ad.title + "\" is old!"); 
+    };
+
+    if (isNotSponsored && postedAfterLastSearch) { 
+        loggers("Ad with title: \"" + ad.title + "\" validated!"); 
+    } else if (!isNotSponsored) { 
+        loggers("Ad with title \"" + ad.title + "\" is sponsored, moving to next ad!"); 
+    } else { 
+        loggers("Ad with title: \"" + ad.title + "\" after cutoff date, stopping search! (" + ad.Date() + ")"); 
+    };
+}
+
+
+// Footer
+function logSearchResults(validAds) {
+    loggers(validAds.length + " ads found to be valid.");
+    if (config.debugType == "full" || config.debugType == "external") { stream.write("\n"); };
+}
+
+
+// Logging logic
+function loggers(output) {
+    switch(config.debugType) {
+        case "full":
+            console.log("DEBUG - " + output);
+            stream.write(new Date().toLocaleTimeString() + " - " + output + "\n");
+            break;
+
+        case "console":
+            console.log("DEBUG - " + output);
+            break;
+
+        case "external":
+            stream.write(new Date().toLocaleTimeString() + " - " + output + "\n");
+            break;
+            
+        default:
+            console.log("DEBUG - " + output);
+            stream.write(new Date().toLocaleTimeString() + " - " + output + "\n");
+            break;
+    }
+}
+
+
+module.exports.logSearchInfo = logSearchInfo;
+module.exports.logAdValidation = logAdValidation;
+module.exports.logSearchResults = logSearchResults;
