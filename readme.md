@@ -12,6 +12,8 @@ Makes use of various libraries scrape Kijiji and notify users of new postings as
 
 - [ ] Display a live countdown to the next scan in terminal.
 
+- [ ] Condense ads into a single message.
+
 ## Nice-to-Haves
 
 - [ ] Alerts on additional platforms.
@@ -20,4 +22,10 @@ Makes use of various libraries scrape Kijiji and notify users of new postings as
 
 ## Known Bugs:
 
-- [ ] Certain ads are not being picked up as new when they are posted. In a test, an ad posted at 6:39:15pm was not in the list of results returned by a scan performed at 6:39:40pm~, despite having been live for 25 seconds at that point. The next scan 30 seconds later found this ad, but because it was found to be posted before the scan done at 6:39:40pm it was classified as having already been pushed to users. 
+- [ ] Certain ads are not being picked up as new when they are posted. In a test, an ad posted at **6:39:15pm** was not in the list of results returned by a scan performed at **6:39:40pm~**, despite having been live for 25 seconds at that point. The next scan 30 seconds later found this ad, but because it was found to be posted before the scan done at **6:39:40pm** it was classified as having already been pushed to users. 
+- [ ] Program won't run unless you manually create a log directory under the project root.
+- [ ] Starting the program in different ways, i.e. node run start vs node index.js, may introduce errors related to relative paths for logging.
+
+## Notes:
+
+Ads don't seem to be picked up by the mobile API for up to a minute after they are posted.

@@ -35,7 +35,8 @@ const main = x => {
         });
     });
     const job = new SimpleIntervalJob({ minutes: searchInterval, }, task);
-    new SimpleIntervalJob()
+    new SimpleIntervalJob();
+
     console.log("Starting up...\nNext check in " + searchInterval + " minute(s).");
     scheduler.addSimpleIntervalJob(job);
 };
@@ -78,22 +79,26 @@ function isNotSponsored(ad) {
 
 // Send information about new ads to Telegram
 function notifyTelegram(newAds) {
+    var output = "";
     if (newAds.length > 0) {
-        client.sendMessage(config.telegramChatID, newAds.length + " new ads found.");
-    };
-    // Ads are in reverse order, so read them backwards
-    for (i = newAds.length-1; i >= 0; i--) {
-        client.sendMessage(config.telegramChatID, newAds[i].toString());
+        output = output.concat(newAds.length + " new ad(s) found.\n\n");
+
+        // Ads are in reverse order, so read them backwards
+        for (i = newAds.length-1; i >= 0; i--) {
+            output = output.concat(newAds[i].toString() + "\n");
+        };
+
+        client.sendMessage(config.telegramChatID, output);
     };
 };
 
 // Print ad info from array to console
 function printAdInfo(ads) {
-    console.log("Found " + ads.length + " Ads:\n================");
+    console.log("Found " + ads.length + " Ads:");
     for (let i = 0; i < ads.length; i++) {
-        console.log(ads[i].title + " || Posted at: " + ads[i].date);
+        console.log("||| " + ads[i].title + " || Posted at: " + ads[i].date);
     };
-    console.log("================\nNext check in " + searchInterval + " minute(s).\n")
+    console.log("Next check in " + searchInterval + " minute(s).\n")
 };
 
 // Print information about the current search to console

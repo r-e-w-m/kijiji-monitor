@@ -4,6 +4,7 @@ const { locations, categories } = require("kijiji-scraper");
 
 // Telegram Bot Configuration
 const accessToken;
+const chatID;
 
 // Kijiji-Scraper Configuration
 // Documentation for each parameter can be found in the ReadMe at https://github.com/mwpenny/kijiji-scraper
@@ -38,3 +39,20 @@ const options = {
     // scrapeResultsDetails:
     // resultDetailsDelayMs:
 };
+
+const searchInterval; // Search frequency in minutes
+
+
+// Enable/Disable Debugging
+const debugMode;
+const debugType; // full, console, or external (log.txt)
+
+
+// Exports
+module.exports.telegramAccessToken = accessToken;
+module.exports.telegramChatID = chatID;
+module.exports.kijijiParams = params;
+module.exports.kijijiOptions = options;
+module.exports.searchInterval = searchInterval;
+module.exports.debugMode = debugMode;
+module.exports.debugType = debugType;
