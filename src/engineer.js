@@ -6,67 +6,56 @@ const { Ad } = require("kijiji-scraper");
 
 
 // Header
-function logSearchInfo(searchTerm, ads) {
+function logSearchInfo(searchTerm, ads, lastSearchTime, currentSearchTime) {
     loggers("New search started for: \"" + searchTerm + "\"");
-    loggers("Examining " + ads.length + " ads!");
+    loggers("Retrieving the " + config.kijijiOptions.maxResults + " newest ads.");
+    loggers("Last Search: " + lastSearchTime.toLocaleTimeString() 
+    + ", Current Search: " + currentSearchTime.toLocaleTimeString());
 }
 
 
 // Body
-function logAdValidation(ad, isNotSponsored, postedAfterLastSearch, ads, lastSearchTime) {
-    if (isNotSponsored) { 
-        loggers("Ad with title: \"" + ad.title + "\" is not sponsored!"); 
-    } else { 
-        loggers("Ad with title: \"" + ad.title + "\" is sponsored!");
-    };
+function logAdValidation(ad, isNotSponsored, newAd, lastSearchTime) {
+    var output = "Post Time: " + ad.date.toLocaleTimeString() + " == Sponsored: [";
 
-    if (postedAfterLastSearch) { 
-        loggers("Ad with title: \"" + ad.title + "\" is new!"); 
-    } else { 
-        loggers("Ad with title: \"" + ad.title + "\" is old!"); 
-    };
+    if (!isNotSponsored) { output = output.concat("X") } else { output = output.concat(" ") };
+    output = output.concat("] == New: [");
+    
+    if (newAd) { output = output.concat("X")} else { output = output.concat(" ")};
+    output = output.concat("] == Title: " + ad.title);
 
-    if (isNotSponsored && postedAfterLastSearch) { 
-        loggers("Ad with title: \"" + ad.title + "\" validated!"); 
-    } else if (!isNotSponsored) { 
-        loggers("Ad with title \"" + ad.title + "\" is sponsored, moving to next ad!"); 
-    } else { 
-        loggers("Ad with title: \"" + ad.title + "\" after cutoff date, stopping search!"); 
-        loggers("Last Search was at: " + lastSearchTime.toLocaleTimeString() + " and ad was posted at " + ad.date.toLocaleTimeString());
-        loggers("List of ads returned from scraper:");
-        for (var i = 0; i < ads.length; i++) {
-            loggers("||| " + ads[i].title + " - " + ads[i].date.toLocaleDateString() + " " + ads[i].date.toLocaleTimeString());
-        }
-    };
+    loggers(output);
 }
 
 
 // Footer
-function logSearchResults(validAds) {
+function logSearchResults(ads, validAds) {
     loggers(validAds.length + " ads found to be valid.");
     if (config.debugType == "full" || config.debugType == "external") { stream.write("\n"); };
+    loggers("Next scan will occur in " + config.searchInterval+ " minutes(s).\n")
 }
 
 
 // Logging logic
 function loggers(output) {
+    const timeStamp = new Date().toLocaleTimeString() + " - ";
     switch(config.debugType) {
         case "full":
-            console.log("DEBUG - " + output);
-            stream.write(new Date().toLocaleTimeString() + " - " + output + "\n");
+            console.log(timeStamp + output);
+            stream.write(timeStamp + output + "\n");
             break;
 
         case "console":
-            console.log("DEBUG - " + output);
+            console.log(timeStamp + output);
             break;
 
         case "external":
-            stream.write(new Date().toLocaleTimeString() + " - " + output + "\n");
+            stream.write(timeStamp + output + "\n");
             break;
             
         default:
-            console.log("DEBUG - " + output);
-            stream.write(new Date().toLocaleTimeString() + " - " + output + "\n");
+            console.log(timeStamp + output);
+            stream.write(timeStamp + output + "\n");
             break;
     }
 }
@@ -75,3 +64,4 @@ function loggers(output) {
 module.exports.logSearchInfo = logSearchInfo;
 module.exports.logAdValidation = logAdValidation;
 module.exports.logSearchResults = logSearchResults;
+module.exports.loggers = loggers;

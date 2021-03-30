@@ -5,58 +5,63 @@ const { ToadScheduler, SimpleIntervalJob, Task} = require("toad-scheduler");
 const config = require("./config.js");
 const engineer = require("./engineer"); // Engineer solves problems
 
-
-// Variables
-var validAds = [];
-var lastSearchTime = new Date(); // '2021-02-17T03:24:00'
+// Settings
 const debugMode = config.debugMode;
 const searchInterval = config.searchInterval;
-const client = new TelegramClient({
-    accessToken: config.telegramAccessToken
-});
+
+// Variables
+var previousAds = [];
+var lastSearchTime = new Date(); // '2021-02-17T03:24:00'
+const scheduler = new ToadScheduler();
+const task = new Task("Scrape New Ads", () => main());
+const job = new SimpleIntervalJob({ minutes: searchInterval }, task);
+const client = new TelegramClient({ accessToken: config.telegramAccessToken });
+
+engineer.loggers("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+engineer.loggers("Starting up the scraper...");
+engineer.loggers("The first scan will occur in " + searchInterval + " minute(s).");
+engineer.loggers("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+scheduler.addSimpleIntervalJob(job);
 
 
 // Main
-const main = x => {
+async function main() {
+    const currentTime = new Date(); // Record the start time for this search.
+    const searchResults = await search(config.kijijiParams, config.kijijiOptions);
+    if (debugMode) { engineer.logSearchInfo(config.kijijiParams.q, searchResults, lastSearchTime, currentTime); };
+    
+    const validAds = validateAds(searchResults);
+    if (debugMode) { engineer.logSearchResults(searchResults, validAds); };
 
-    const scheduler = new ToadScheduler();
-    const task = new Task("Scrape New Ads", () => {
-        search(config.kijijiParams, config.kijijiOptions).then(ads => {
-            printSearchInfo();
-            if (debugMode) { engineer.logSearchInfo(config.kijijiParams.q, ads); };
-            validateAds(ads);
-            if (debugMode) { engineer.logSearchResults(validAds); };
-            printAdInfo(validAds);
-            notifyTelegram(validAds);
+    notifyTelegram(validAds);
 
-            // Prep for next search
-            validAds = [];
-            lastSearchTime = new Date();
-        });
-    });
-    const job = new SimpleIntervalJob({ minutes: searchInterval, }, task);
-    new SimpleIntervalJob();
-
-    console.log("Starting up...\nNext check in " + searchInterval + " minute(s).");
-    scheduler.addSimpleIntervalJob(job);
+    // Prep for next search
+    previousAds = searchResults;
+    lastSearchTime = currentTime;
+    
 };
-
-main();
-
-// Function Definitions
 
 // Seperate out ads we don't care about
 function validateAds(ads) {
+    var validAds = [];
     for (let i = 0; i < ads.length; i++) {
         let notSponsored = isNotSponsored(ads[i]);
-        let postedAfterLastSearch = validateAdPostTime(ads[i]);
-        if (debugMode) { engineer.logAdValidation(ads[i], notSponsored, postedAfterLastSearch, ads, lastSearchTime); };
-        if (postedAfterLastSearch && isNotSponsored) {
+        let newAd = notInLastSearch(ads[i]);
+        if (debugMode) { engineer.logAdValidation(ads[i], notSponsored, newAd, lastSearchTime); };
+        if (newAd && isNotSponsored) {
             validAds.push(ads[i]);
-        } else if (!postedAfterLastSearch && isNotSponsored) {
-            i = ads.length;
         }
     }
+    return validAds;
+}
+
+// Check if each ad was found in the previous search.
+function notInLastSearch(ad) {
+    for (var i = 0; i < previousAds.length; i++) {
+        if (previousAds[i].url.localeCompare(ad.url) == 0) {
+            return false;
+        };
+    } return true;
 }
 
 // Determine if the ad was posted after the last search
@@ -91,18 +96,3 @@ function notifyTelegram(newAds) {
         client.sendMessage(config.telegramChatID, output);
     };
 };
-
-// Print ad info from array to console
-function printAdInfo(ads) {
-    console.log("Found " + ads.length + " Ads:");
-    for (let i = 0; i < ads.length; i++) {
-        console.log("||| " + ads[i].title + " || Posted at: " + ads[i].date);
-    };
-    console.log("Next check in " + searchInterval + " minute(s).\n")
-};
-
-// Print information about the current search to console
-function printSearchInfo() {
-    console.log("\nLast search was at: " + lastSearchTime);
-    console.log("Searching for ads containing \"" + config.kijijiParams.q + "\"");
-}
