@@ -12,7 +12,7 @@ Makes use of various libraries scrape Kijiji and notify users of new postings as
 
 - [ ] Display a live countdown to the next scan in terminal.
 
-- [ ] Condense ads into a single message.
+- [x] Condense ads into a single message.
 
 ## Nice-to-Haves
 

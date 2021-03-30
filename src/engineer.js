@@ -1,6 +1,6 @@
 // Imports
 const fs = require("fs");
-const stream = fs.createWriteStream("../logs/DebugLog-" + new Date().toLocaleDateString() + ".txt", {flags:'a'});
+const stream = fs.createWriteStream("./logs/DebugLog-" + new Date().toLocaleDateString() + ".txt", {flags:'a'});
 const config = require("./config.js");
 const { Ad } = require("kijiji-scraper");
 
