@@ -1,0 +1,46 @@
+{
+    "Telegram": {
+        "accessToken": "1770915302:AAG8ETIXYS03JNxhO-R8y36M6mJY2R2Bc5g",
+        "chatID": -564697061
+    },
+
+    "kijijiScraper": [
+        {
+            "params": {
+                "locationId": 1700321,
+                "categoryId": 10,
+                "q": "oneplus",
+                "sortType": "DATE_DESCENDING",
+                "distance": 50
+            },
+
+            "options": {
+                "minResults": 1,
+                "maxResults": 10
+            },
+            
+            "searchIntervalMinutes": 0.2
+        },
+        {
+            "params": {
+                "locationId": 1700321,
+                "categoryId": 10,
+                "q": "samsung",
+                "sortType": "DATE_DESCENDING",
+                "distance": 50
+            },
+
+            "options": {
+                "minResults": 1,
+                "maxResults": 10
+            },
+            
+            "searchIntervalMinutes": 0.2
+        }
+    ],
+
+    "internalSettings": {
+        "debugMode": true,
+        "debugType": "full"
+    }
+}
