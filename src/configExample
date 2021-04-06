@@ -1,0 +1,46 @@
+{
+    "Telegram": {
+        "accessToken":,
+        "chatID":
+    },
+
+    "kijijiScraper": [
+        {
+            "params": {
+                "locationId":,
+                "categoryId":,
+                "q":,
+                "sortType":,
+                "distance":
+            },
+
+            "options": {
+                "minResults":,
+                "maxResults":
+            },
+            
+            "searchIntervalMinutes":
+        },
+        {
+            "params": {
+                "locationId":,
+                "categoryId":,
+                "q":,
+                "sortType":,
+                "distance":
+            },
+
+            "options": {
+                "minResults":,
+                "maxResults":
+            },
+            
+            "searchIntervalMinutes":
+        },
+    ],
+    
+    "internalSettings": {
+        "debugMode": true,
+        "debugType": "full"
+    }
+}
