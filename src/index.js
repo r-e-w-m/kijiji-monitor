@@ -46,7 +46,7 @@ async function main(kijijiConfig, jobNumber) {
     if (debugMode, !isFirstSearch) { engineer.logSearchInfo(kijijiConfig.params.q, searchResults, lastSearchTime[jobNumber], currentTime, jobNumber); };
     if (!isFirstSearch) {validAds = validateAds(searchResults, jobNumber)};
     if (debugMode, !isFirstSearch) { engineer.logSearchResults(searchResults, validAds, jobNumber); };
-    if (!isFirstSearch) notifyTelegram(validAds);
+    if (!isFirstSearch) notifyTelegram(validAds, kijijiConfig.params.q);
 
     // Prep for next search
     previousAds[jobNumber] = searchResults;
@@ -88,10 +88,10 @@ function isNotSponsored(ad) {
 };
 
 // Send information about new ads to Telegram
-function notifyTelegram(newAds) {
+function notifyTelegram(newAds, searchTerms) {
     var output = "";
     if (newAds.length > 0) {
-        output = output.concat(newAds.length + " new ad(s) found.\n\n");
+        output = output.concat(newAds.length + " new ad(s) found containing \"" + searchTerms + "\".\n\n");
 
         // Ads are in reverse order, so read them backwards
         for (i = newAds.length-1; i >= 0; i--) {

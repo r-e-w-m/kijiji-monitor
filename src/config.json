@@ -9,7 +9,7 @@
             "params": {
                 "locationId": 1700321,
                 "categoryId": 10,
-                "q": "oneplus",
+                "q": "new",
                 "sortType": "DATE_DESCENDING",
                 "distance": 50
             },
@@ -19,7 +19,7 @@
                 "maxResults": 10
             },
             
-            "searchIntervalMinutes": 0.2
+            "searchIntervalMinutes": 0.5
         },
         {
             "params": {
@@ -35,7 +35,7 @@
                 "maxResults": 10
             },
             
-            "searchIntervalMinutes": 0.2
+            "searchIntervalMinutes": 0.5
         }
     ],
 
