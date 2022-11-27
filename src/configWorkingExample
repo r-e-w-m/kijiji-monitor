@@ -1,0 +1,46 @@
+{
+    "Telegram": {
+        "accessToken": "NopeSorry",
+        "chatID": -999999999
+    },
+
+    "kijijiScraper": [
+        {
+            "params": {
+                "locationId": 1700321,
+                "categoryId": 10,
+                "q": "new",
+                "sortType": "DATE_DESCENDING",
+                "distance": 50
+            },
+
+            "options": {
+                "minResults": 1,
+                "maxResults": 10
+            },
+            
+            "searchIntervalMinutes": 0.5
+        },
+        {
+            "params": {
+                "locationId": 1700321,
+                "categoryId": 10,
+                "q": "samsung",
+                "sortType": "DATE_DESCENDING",
+                "distance": 50
+            },
+
+            "options": {
+                "minResults": 1,
+                "maxResults": 10
+            },
+            
+            "searchIntervalMinutes": 0.5
+        }
+    ],
+
+    "internalSettings": {
+        "debugMode": true,
+        "debugType": "full"
+    }
+}
